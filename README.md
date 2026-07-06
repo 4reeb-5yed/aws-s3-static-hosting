@@ -2,7 +2,7 @@
 
 A simple static webpage hosted on Amazon S3 using its static website hosting feature — no servers, no backend, no database. Built as a hands-on introduction to core AWS concepts: object storage, public access policies, and static content delivery.
 
-**Live URL:** `[paste your S3 website endpoint here after deployment]`
+**Live URL:** [http://areeb-cloud-demo-2026.s3-website-us-east-1.amazonaws.com](http://areeb-cloud-demo-2026.s3-website-us-east-1.amazonaws.com)
 
 ---
 
@@ -27,11 +27,13 @@ Browser <---- returns page ---┘
 
 **Cost:** $0 — entirely within the AWS Free Tier.
 
+**Note:** This bucket serves over HTTP only. S3 static website endpoints don't support HTTPS natively — adding TLS would require putting CloudFront in front of the bucket with an ACM certificate. That's a natural next step, but kept out of scope here to focus on core S3 concepts.
+
 ---
 
 ## Steps taken
 
-1. Created an S3 bucket with a globally unique name, in region `[your region]`
+1. Created an S3 bucket with a globally unique name, in region `us-east-1` (N. Virginia)
 2. Uploaded `index.html` and `error.html` to the bucket
 3. Enabled **Static website hosting** under the bucket's Properties tab, set `index.html` as the index document and `error.html` as the error document
 4. Added a bucket policy allowing public `s3:GetObject` access, scoped only to this bucket
@@ -45,12 +47,15 @@ Browser <---- returns page ---┘
 | Step | Screenshot |
 |---|---|
 | Bucket created | ![Bucket created](screenshots/01-bucket-created.png) |
-| Static hosting enabled | ![Static hosting enabled](screenshots/02-static-hosting-enabled.png) |
-| Bucket policy | ![Bucket policy](screenshots/03-bucket-policy.png) |
-| Website endpoint | ![Website endpoint](screenshots/04-website-endpoint.png) |
-| Live site | ![Live site](screenshots/05-live-site.png) |
+| Files uploaded | ![Upload success](screenshots/02-upload-success.png) |
+| Static hosting enabled | ![Static hosting enabled](screenshots/03-static-hosting-enabled.png) |
+| Bucket policy added | ![Bucket policy](screenshots/04-bucket-policy.png) |
+| **Before policy** — 403 Forbidden | ![Before policy](screenshots/05a-before-policy-403.png) |
+| **After policy** — site live | ![After policy](screenshots/05b-after-policy-live.png) |
 
-*(AWS Account ID and any billing details are cropped out of all screenshots for privacy.)*
+Before the bucket policy was added, the site returned a `403 Forbidden` even though static hosting was enabled — S3 blocks all access by default until a policy explicitly allows it. After adding a policy granting public `s3:GetObject`, the same URL served the page correctly. This step-by-step comparison is intentional: it shows the policy isn't just boilerplate, it's the actual gate controlling access.
+
+*(AWS Account ID and any billing details are cropped/blurred out of all console screenshots for privacy.)*
 
 ---
 
